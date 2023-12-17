@@ -2,7 +2,7 @@ const fromCur = document.querySelector(".from select");
 const toCur = document.querySelector(".to select");
 const getBtn = document.querySelector("form button");
 const exIcon = document.querySelector("form .reverse");
-const amount = document.querySelector("form input");
+const amount = document.querySelector(".amount input");
 const exRateTxt = document.querySelector("form .result");
 
 // Event listener for currency dropdowns (select)
