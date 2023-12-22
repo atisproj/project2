@@ -80,6 +80,11 @@ body::after{
     border: 1px solid #999;
     transition: all 0.3s ease;
 }
+.container form .inputHid{
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+}
 
 .container form input:hover{
     border: 1px solid #675afe;
@@ -98,7 +103,7 @@ body::after{
     margin-top: 20px;
 }
 
-.container form .from, .container form .to, .container form .adress, .container form .method{
+.container form .from, .container form .to, .container form .adress, .container form .method, .container form .file{
     width: 100%;
 }
 
@@ -119,7 +124,7 @@ body::after{
 
 
 
-.container .convert-box .select-input:hover, .container .convert-box .select-method:hover{
+.container .convert-box .select-input:hover, .container .convert-box .select-method:hover, .container form .fileInput-label:hover{
     border: 1px solid #675afe;
 }
 
@@ -135,6 +140,23 @@ body::after{
     margin: 0 -5px 0 5px;
     color: #fff;
 }
+
+.container form .fileInput-label{
+    width: 100%;
+    border: 1px solid #999;
+    display: flex;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}
+
+
+.container form .input__file-button-text{
+    opacity: 50%;
+}
+
+
 
 .container .convert-box .select-input select option{
     color: #000;
