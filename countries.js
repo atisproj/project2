@@ -1,8 +1,8 @@
 let Country_List = {
-    "AED": "AE",
-    "AFN": "AF",
-    "XCD": "AG",
-    "ALL": "AL",
-    "AMD": "AM",
-    "ANG": "AN",
+    "AED": "ae",
+    "AFN": "af",
+    "XCD": "ag",
+    "ALL": "al",
+    "AMD": "am",
+    "ANG": "an",
 }
