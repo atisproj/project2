@@ -1,4 +1,4 @@
-let cuurencyList = {
+let cuurencyRate = {
     'RUBCNY': 'B1',
     'RUBBTC': 'B2',
     'RUBUSDT': 'B3',
