@@ -4,7 +4,7 @@ const getBtn = document.querySelector("form button");
 const exIcon = document.querySelector("form .reverse");
 const amount = document.querySelector(".amount input");
 const exRateTxt = document.querySelector("form .result");
-
+const method = document.querySelector(".method select");
 // Event listener for currency dropdowns (select)
 
 [fromCur, toCur].forEach((select, i) => {
@@ -19,6 +19,16 @@ const exRateTxt = document.querySelector("form .result");
     });
     select.addEventListener('change', getExchangeRate)
 });
+
+
+//Function listener for method dropdowns (selet)
+[method].forEach((select, i) => {
+    for (let metCode in method_List) {
+        const selected = (i === 0 && metCode === "Alipay") ? "selected" : "";
+        select.insertAdjacentHTML("beforeend", `<option value="${metCode}" ${selected}>${metCode}</option>`);
+    }
+});
+
 
 // Function to get exchange rate from api
 
