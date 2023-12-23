@@ -21,15 +21,6 @@ const method = document.querySelector(".method select");
 });
 
 
-//Function listener for method dropdowns (selet)
-[method].forEach((select, i) => {
-    for (let metCode in method_List) {
-        const selected = (i === 0 && metCode === "Alipay") ? "selected" : "";
-        select.insertAdjacentHTML("beforeend", `<option value="${metCode}" ${selected}>${metCode}</option>`);
-    }
-});
-
-
 // Function to get exchange rate from api
 
 async function getExchangeRate() {
