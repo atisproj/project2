@@ -18,9 +18,8 @@ const maxRes = document.querySelector("form .reserv");
         const imgTag = select.parentElement.querySelector("img");
         imgTag.src = `https://coinicons-api.vercel.app/api/icon/${currencyList[code]}`;
     });
-    select.addEventListener('change', getMaxReserve)
     select.addEventListener('change', getExchangeRate)
-
+    select.addEventListener('change', getMaxReserve)
 });
 
 for (let i in method_List) {
@@ -37,8 +36,7 @@ async function getMaxReserve() {
         const coord = maxReserveList[toCur.value];
         const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/15dKus_k2TI23_sBnYQjWOfACfijZsk7xJ4CsVMFLMMs/values/sheet3!${coord}?key=AIzaSyB-dszV5PwFcT5yXw-ZQ5dwA3l4YCMfeJE`);
         const resRes = await response.json()
-        console.log(resRes)
-        maxRes.innerText = "Max: " + resRes.values[0][0];
+        maxRes.innerText = "Max: " + resRes.values[0][0] + " " + toCur.value;
     } catch (error) {
         maxRes.innerText = "Что-то пошло не так...";
     }
@@ -62,20 +60,19 @@ async function getExchangeRate() {
             };
             const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/15dKus_k2TI23_sBnYQjWOfACfijZsk7xJ4CsVMFLMMs/values/${coord}?key=AIzaSyB-dszV5PwFcT5yXw-ZQ5dwA3l4YCMfeJE`);
             const resStr = await response.json()
-            console.log(resStr)
             exchangeRate = parseFloat(resStr.values[0][0]);
         }
         const totalExRate = (amountVal * exchangeRate).toFixed(2);
         exRateTxt.innerText = `${amountVal} ${fromCur.value} = ${totalExRate} ${toCur.value}`;
-        console.log('mr => ', maxRes.innerText.slice(5))
         if (totalExRate > parseFloat(maxRes.innerText.slice(5))) {
+            maxRes.style.opacity = "100%";
             getBtn.disabled = 'disabled';
             const css = `
-            .container form .button{
+            .container form .button, .container .convert-box .to .select-input{
                 color: red;
                 border: 1px solid red;
             }
-            .container form .button:hover{
+            .container form .button:hover, .container .convert-box .to .select-input:hover{
                 border: 1px solid red;
             }`;
             let style = document.createElement('style');
@@ -88,6 +85,7 @@ async function getExchangeRate() {
             document.getElementsByTagName('head')[0].appendChild(style);
         } else {
             const style = document.querySelector('.style')
+            maxRes.style.opacity = "0%";
             if (style) {
                 style.parentElement.removeChild(style);
                 getBtn.disabled = false;
@@ -102,6 +100,7 @@ async function getExchangeRate() {
 //https://coinicons-api.vercel.app/api/icon/usdt
 
 // Event listeners for button and exchange icon click
+
 
 window.addEventListener("load", getExchangeRate);
 window.addEventListener("load", getMaxReserve)

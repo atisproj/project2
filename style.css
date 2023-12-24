@@ -186,6 +186,7 @@ body::after{
     font-size: 0.9rem;
     color: red;
     font-weight: 600;
+    opacity: 0%;
 }
 
 .container form button{
