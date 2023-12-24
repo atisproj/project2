@@ -5,6 +5,7 @@ const exIcon = document.querySelector("form .reverse");
 const amount = document.querySelector(".amount input");
 const exRateTxt = document.querySelector("form .result");
 const method = document.querySelector(".method select");
+const maxRes = document.querySelector("form .reserv");
 // Event listener for currency dropdowns (select)
 
 [fromCur, toCur].forEach((select, i) => {
@@ -18,6 +19,7 @@ const method = document.querySelector(".method select");
         imgTag.src = `https://coinicons-api.vercel.app/api/icon/${currencyList[code]}`;
     });
     select.addEventListener('change', getExchangeRate)
+    select.addEventListener('change', getMaxReserve)
 });
 
 for (let i in method_List) {
@@ -25,6 +27,21 @@ for (let i in method_List) {
     method.insertAdjacentHTML("beforeend", `<option value="${method_List[i]}" ${selected}>${method_List[i]}</option>`);
 }
 
+
+// Function max Reserve
+
+async function getMaxReserve() {
+    maxRes.innerText = "Max колчиество"
+    try{
+        const coord = maxReserveList[toCur.value];
+        const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/15dKus_k2TI23_sBnYQjWOfACfijZsk7xJ4CsVMFLMMs/values/sheet3!${coord}?key=AIzaSyB-dszV5PwFcT5yXw-ZQ5dwA3l4YCMfeJE`);
+        const resRes = await response.json()
+        console.log(resRes)
+        maxRes.innerText = "Max: " + resRes.values[0][0];
+    } catch(error){
+        maxRes.innerText = "Что-то пошло не так...";
+    }
+}
 
 // Function to get exchange rate from api
 
@@ -59,6 +76,7 @@ async function getExchangeRate() {
 // Event listeners for button and exchange icon click
 
 window.addEventListener("load", getExchangeRate);
+window.addEventListener("load", getMaxReserve)
 amount.addEventListener('input', getExchangeRate)
 
 exIcon.addEventListener("click", () => {
