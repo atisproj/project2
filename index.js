@@ -20,6 +20,11 @@ const method = document.querySelector(".method select");
     select.addEventListener('change', getExchangeRate)
 });
 
+for (let i in method_List) {
+    const selected = (method_List[i] === 'Alipay') ? "selected" : "";
+    method.insertAdjacentHTML("beforeend", `<option value="${method_List[i]}" ${selected}>${method_List[i]}</option>`);
+}
+
 
 // Function to get exchange rate from api
 
