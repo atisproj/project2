@@ -1,6 +1,6 @@
 const fromCur = document.querySelector(".from select");
 const toCur = document.querySelector(".to select");
-const getBtn = document.querySelector("form button");
+const getBtn = document.querySelector("form .button");
 const exIcon = document.querySelector("form .reverse");
 const amount = document.querySelector(".amount input");
 const exRateTxt = document.querySelector("form .result");
@@ -18,8 +18,9 @@ const maxRes = document.querySelector("form .reserv");
         const imgTag = select.parentElement.querySelector("img");
         imgTag.src = `https://coinicons-api.vercel.app/api/icon/${currencyList[code]}`;
     });
-    select.addEventListener('change', getExchangeRate)
     select.addEventListener('change', getMaxReserve)
+    select.addEventListener('change', getExchangeRate)
+
 });
 
 for (let i in method_List) {
@@ -32,13 +33,13 @@ for (let i in method_List) {
 
 async function getMaxReserve() {
     maxRes.innerText = "Max колчиество"
-    try{
+    try {
         const coord = maxReserveList[toCur.value];
         const response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/15dKus_k2TI23_sBnYQjWOfACfijZsk7xJ4CsVMFLMMs/values/sheet3!${coord}?key=AIzaSyB-dszV5PwFcT5yXw-ZQ5dwA3l4YCMfeJE`);
         const resRes = await response.json()
         console.log(resRes)
         maxRes.innerText = "Max: " + resRes.values[0][0];
-    } catch(error){
+    } catch (error) {
         maxRes.innerText = "Что-то пошло не так...";
     }
 }
@@ -66,6 +67,33 @@ async function getExchangeRate() {
         }
         const totalExRate = (amountVal * exchangeRate).toFixed(2);
         exRateTxt.innerText = `${amountVal} ${fromCur.value} = ${totalExRate} ${toCur.value}`;
+        console.log('mr => ', maxRes.innerText.slice(5))
+        if (totalExRate > parseFloat(maxRes.innerText.slice(5))) {
+            getBtn.disabled = 'disabled';
+            const css = `
+            .container form .button{
+                color: red;
+                border: 1px solid red;
+            }
+            .container form .button:hover{
+                border: 1px solid red;
+            }`;
+            let style = document.createElement('style');
+            if (style.styleSheet) {
+                style.styleSheet.cssText = css;
+            } else {
+                style.appendChild(document.createTextNode(css));
+            }
+            style.classList.add('style')
+            document.getElementsByTagName('head')[0].appendChild(style);
+        } else {
+            const style = document.querySelector('.style')
+            if (style) {
+                style.parentElement.removeChild(style);
+                getBtn.disabled = false;
+            }
+        }
+
     } catch (error) {
         exRateTxt.innerText = "Что-то пошло не так...";
     }
