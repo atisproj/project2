@@ -124,7 +124,7 @@ body::after{
 
 
 
-.container .convert-box .select-input:hover, .container .convert-box .select-method:hover, .container form .fileInput-label:hover{
+.container .convert-box .select-input:hover, .container form .fileInput-label:hover{
     border: 1px solid #675afe;
 }
 

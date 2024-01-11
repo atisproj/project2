@@ -4,7 +4,8 @@ const getBtn = document.querySelector("form .button");
 const exIcon = document.querySelector("form .reverse");
 const amount = document.querySelector(".amount input");
 const exRateTxt = document.querySelector("form .result");
-const method = document.querySelector(".method select");
+const methodGet = document.querySelector(".method .select-method");
+let methodSend = '';
 const maxRes = document.querySelector("form .reserv");
 // Event listener for currency dropdowns (select)
 
@@ -22,10 +23,30 @@ const maxRes = document.querySelector("form .reserv");
     select.addEventListener('change', getMaxReserve)
 });
 
-for (let i in method_List) {
-    const selected = (method_List[i] === 'Alipay') ? "selected" : "";
-    method.insertAdjacentHTML("beforeend", `<option value="${method_List[i]}" ${selected}>${method_List[i]}</option>`);
+const changeMethodGet = () => {
+    const v = toCur.value
+    if (v == 'USDT' || v == 'BTC' || v == 'ETH') {
+        methodGet.innerText = 'Crypto address';
+    } else if (v == 'CNY') {
+        methodGet.innerText = 'Alipay';
+    } else if (v == 'RUB') {
+        methodGet.innerText = 'Bank card';
+    }
 }
+
+const changeMethodSend = () => {
+    const v = fromCur.value
+    if (v == 'USDT' || v == 'BTC' || v == 'ETH') {
+        methodSend = 'Crypto address';
+    } else if (v == 'CNY') {
+        methodSend = 'Alipay';
+    } else if (v == 'RUB') {
+        methodSend = 'Bank card';
+    }
+}
+
+toCur.addEventListener('change', changeMethodGet)
+fromCur.addEventListener('change', changeMethodSend)
 
 
 // Function max Reserve
@@ -65,24 +86,29 @@ async function getExchangeRate() {
         const totalExRate = (amountVal * exchangeRate).toFixed(2);
         exRateTxt.innerText = `${amountVal} ${fromCur.value} = ${totalExRate} ${toCur.value}`;
         if (totalExRate > parseFloat(maxRes.innerText.slice(5))) {
-            maxRes.style.opacity = "100%";
-            getBtn.disabled = 'disabled';
-            const css = `
+            if (!document.querySelector('.style')) {
+                maxRes.style.opacity = "100%";
+                getBtn.disabled = 'disabled';
+                const css = `
             .container form .button, .container .convert-box .to .select-input{
                 color: red;
                 border: 1px solid red;
+                background: none;
             }
             .container form .button:hover, .container .convert-box .to .select-input:hover{
                 border: 1px solid red;
+                background: none;
             }`;
-            let style = document.createElement('style');
-            if (style.styleSheet) {
-                style.styleSheet.cssText = css;
-            } else {
-                style.appendChild(document.createTextNode(css));
+                let style = document.createElement('style');
+                if (style.styleSheet) {
+                    style.styleSheet.cssText = css;
+                } else {
+                    style.appendChild(document.createTextNode(css));
+                }
+                style.classList.add('style')
+                document.getElementsByTagName('head')[0].appendChild(style);
             }
-            style.classList.add('style')
-            document.getElementsByTagName('head')[0].appendChild(style);
+
         } else {
             const style = document.querySelector('.style')
             maxRes.style.opacity = "0%";
@@ -104,6 +130,8 @@ async function getExchangeRate() {
 
 window.addEventListener("load", getExchangeRate);
 window.addEventListener("load", getMaxReserve)
+window.addEventListener('load', changeMethodGet)
+window.addEventListener('load', changeMethodSend)
 amount.addEventListener('input', getExchangeRate)
 
 exIcon.addEventListener("click", () => {
@@ -115,3 +143,20 @@ exIcon.addEventListener("click", () => {
     });
     getExchangeRate();
 });
+
+getBtn.addEventListener('click', async () => {
+    const file = document.getElementById('fileInput')
+    const fileUrl = window.URL.createObjectURL(file.files[0])
+    console.log('url => ', fileUrl)
+    const sumClient = exRateTxt.innerText.slice(exRateTxt.innerText.indexOf('=') + 2)
+    const url = `https://script.google.com/macros/s/AKfycbycgL1xh1M6CHtO0F9262C_C-9TaPMR9IgVxfL_EGKSZoanjrk6WHJAMzwsYW2L1TDR/exec?sumGet=${amount.value + ' ' + fromCur.value}&methodSend=${methodGet.innerText}&methodGet=${methodSend}&qrCode=URL&sumClient=${sumClient}`;
+    await fetch(url, {
+        method: 'POST',
+        body: {}
+    })
+})
+getBtn.onclick = function () {
+    location.href = 'google.com';
+}
+
+//
