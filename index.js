@@ -7,6 +7,9 @@ const exRateTxt = document.querySelector("form .result");
 const methodGet = document.querySelector(".method .select-method");
 let methodSend = '';
 const maxRes = document.querySelector("form .reserv");
+const fileInput = document.querySelector('.inputHid');
+const form = document.querySelector('form');
+let imgData = '';
 // Event listener for currency dropdowns (select)
 
 [fromCur, toCur].forEach((select, i) => {
@@ -25,13 +28,19 @@ const maxRes = document.querySelector("form .reserv");
 
 const changeMethodGet = () => {
     const v = toCur.value
+    const url = 'https://asdasdasdasdq.tilda.ws/payment'
+    let path = ''
     if (v == 'USDT' || v == 'BTC' || v == 'ETH') {
         methodGet.innerText = 'Crypto address';
+        path = 'usdt_bep20';
     } else if (v == 'CNY') {
         methodGet.innerText = 'Alipay';
+        path = 'ali';
     } else if (v == 'RUB') {
         methodGet.innerText = 'Bank card';
+        path = 'bank2';
     }
+    form.action = url + path;
 }
 
 const changeMethodSend = () => {
@@ -144,19 +153,31 @@ exIcon.addEventListener("click", () => {
     getExchangeRate();
 });
 
+fileInput.addEventListener('input', (p) => {
+    const file = p.target.files[0]
+    let imgRead = new FileReader()
+    imgRead.onload = (e) => {
+        imgData = e.target.result.split('base64,')[1];
+    }
+    imgRead.readAsDataURL(file);
+})
+
 getBtn.addEventListener('click', async () => {
     const file = document.getElementById('fileInput')
     const fileUrl = window.URL.createObjectURL(file.files[0])
-    console.log('url => ', fileUrl)
     const sumClient = exRateTxt.innerText.slice(exRateTxt.innerText.indexOf('=') + 2)
-    const url = `https://script.google.com/macros/s/AKfycbycgL1xh1M6CHtO0F9262C_C-9TaPMR9IgVxfL_EGKSZoanjrk6WHJAMzwsYW2L1TDR/exec?sumGet=${amount.value + ' ' + fromCur.value}&methodSend=${methodGet.innerText}&methodGet=${methodSend}&qrCode=URL&sumClient=${sumClient}`;
+    const url = `https://script.google.com/macros/s/AKfycbxNdWI1c0hxR6n13lxtVGP_K7MEq_X5kWM2nCjyTURie2hgDQ9RhiaFQW8-qX4p4sr3/exec?sumGet=${amount.value + ' ' + fromCur.value}&methodSend=${methodGet.innerText}&methodGet=${methodSend}&data=${imgData}&sumClient=${sumClient}`;
     await fetch(url, {
         method: 'POST',
         body: {}
     })
 })
-getBtn.onclick = function () {
-    location.href = 'google.com';
-}
 
-//
+fileInput.addEventListener('input', () => {
+    const text = fileInput.parentElement.querySelector('.input__file-button-text');
+    if (fileInput.files.length == 0) {
+        text.innerText = 'Выберите файл'
+    } else {
+        text.innerText = 'Файл выбран'
+    }
+})
