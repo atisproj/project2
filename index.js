@@ -155,21 +155,29 @@ exIcon.addEventListener("click", () => {
 
 fileInput.addEventListener('input', (p) => {
     const file = p.target.files[0]
+
     let imgRead = new FileReader()
     imgRead.onload = (e) => {
+        console.log(e.target.result)
         imgData = e.target.result.split('base64,')[1];
     }
     imgRead.readAsDataURL(file);
+
 })
 
 getBtn.addEventListener('click', async () => {
     const file = document.getElementById('fileInput')
     const fileUrl = window.URL.createObjectURL(file.files[0])
     const sumClient = exRateTxt.innerText.slice(exRateTxt.innerText.indexOf('=') + 2)
-    const url = `https://script.google.com/macros/s/AKfycbxNdWI1c0hxR6n13lxtVGP_K7MEq_X5kWM2nCjyTURie2hgDQ9RhiaFQW8-qX4p4sr3/exec?sumGet=${amount.value + ' ' + fromCur.value}&methodSend=${methodGet.innerText}&methodGet=${methodSend}&data=${imgData}&sumClient=${sumClient}`;
+    const obj = {
+        base64: imgData,
+        type: file.files[0].type,
+        name: file.files[0].name
+    }
+    const url = `https://script.google.com/macros/s/AKfycbzqaz_oRtMMtayaIbSaDetBgFZ520ZBZfTxEKYNfJE1Tcr-NBddv8dj1iizLyo55dDU/exec?sumGet=${amount.value + ' ' + fromCur.value}&methodSend=${methodGet.innerText}&methodGet=${methodSend}&sumClient=${sumClient}`;
     await fetch(url, {
         method: 'POST',
-        body: {}
+        body: JSON.stringify(obj)
     })
 })
 
